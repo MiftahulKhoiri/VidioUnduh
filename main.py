@@ -1,1 +1,1 @@
-program utama 
+print ("main.py")
