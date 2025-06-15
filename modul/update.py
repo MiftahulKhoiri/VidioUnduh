@@ -14,7 +14,6 @@ except ImportError:
     HIJAU = MERAH = KUNING = BIRU = RESET = ""
 
 def is_git_repo():
-    """Cek apakah folder ini adalah sebuah git repository."""
     return os.path.isdir(".git")
 
 def tampilkan_salam():
@@ -39,10 +38,13 @@ def tampilkan_pembaruan(branch="main"):
         )
         if hasil.stdout.strip():
             print(hasil.stdout)
+            return True
         else:
             print(f"{HIJAU}Sudah menggunakan versi terbaru! Tidak ada pembaruan di remote.{RESET}")
+            return False
     except Exception as error:
         print(f"{MERAH}[ERROR] Gagal mengambil log pembaruan: {error}{RESET}")
+        return False
 
 def konfirmasi_pembaruan():
     while True:
@@ -81,7 +83,11 @@ def proses_update(branch="main"):
         return
     try:
         tampilkan_salam()
-        tampilkan_pembaruan(branch)
+        ada_pembaruan = tampilkan_pembaruan(branch)
+        if not ada_pembaruan:
+            # Jika tidak ada pembaruan, selesai di sini
+            print(f"{HIJAU}Program sudah versi terbaru. Tidak perlu update.{RESET}")
+            return
         if konfirmasi_pembaruan():
             lakukan_git_pull(branch)
     except KeyboardInterrupt:
@@ -90,6 +96,5 @@ def proses_update(branch="main"):
         print(f"{MERAH}[ERROR] Terjadi kesalahan fatal: {error}{RESET}")
 
 if __name__ == "__main__":
-    # Bisa menerima nama branch dari argumen
     branch = sys.argv[1] if len(sys.argv) > 1 else "main"
     proses_update(branch)
