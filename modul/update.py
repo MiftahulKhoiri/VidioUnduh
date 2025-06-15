@@ -1,86 +1,95 @@
 import subprocess
+import sys
+import os
+
+try:
+    from colorama import Fore, Style, init as colorama_init
+    colorama_init()
+    HIJAU = Fore.GREEN
+    MERAH = Fore.RED
+    KUNING = Fore.YELLOW
+    BIRU = Fore.BLUE
+    RESET = Style.RESET_ALL
+except ImportError:
+    HIJAU = MERAH = KUNING = BIRU = RESET = ""
+
+def is_git_repo():
+    """Cek apakah folder ini adalah sebuah git repository."""
+    return os.path.isdir(".git")
 
 def tampilkan_salam():
-    """Menampilkan salam pembuka saat script dijalankan."""
-    print("="*40)
+    print(f"{BIRU}{'='*40}")
     print("Mendapatkan pembaruan script")
-    print("="*40)
+    print(f"{'='*40}{RESET}")
 
-def tampilkan_pembaruan():
-    """
-    Menampilkan daftar pembaruan (commit) terbaru dari repository.
-    Akan menampilkan commit dari remote jika ada.
-    """
-    print("\n[INFO] Daftar pembaruan terbaru di repository:")
+def tampilkan_pembaruan(branch="main"):
+    print(f"\n{KUNING}[INFO]{RESET} Daftar pembaruan terbaru di repository:")
     try:
-        # Mengambil pembaruan dari remote repository
         subprocess.run(
             ["git", "fetch"],
             check=True,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL
         )
-        # Menampilkan commit terbaru dari remote (origin/main)
         hasil = subprocess.run(
-            ["git", "log", "HEAD..origin/main", "--oneline"],
-            check=False,  # Tidak error jika sudah up-to-date
+            ["git", "log", f"HEAD..origin/{branch}", "--oneline"],
+            check=False,
             capture_output=True,
             text=True
         )
         if hasil.stdout.strip():
             print(hasil.stdout)
         else:
-            print("Sudah menggunakan versi terbaru! Tidak ada pembaruan di remote.")
+            print(f"{HIJAU}Sudah menggunakan versi terbaru! Tidak ada pembaruan di remote.{RESET}")
     except Exception as error:
-        print(f"[ERROR] Gagal mengambil log pembaruan: {error}")
+        print(f"{MERAH}[ERROR] Gagal mengambil log pembaruan: {error}{RESET}")
 
 def konfirmasi_pembaruan():
-    """
-    Meminta konfirmasi user untuk melanjutkan proses git pull.
-    Akan mengulang input jika tidak valid.
-    """
     while True:
         try:
-            jawaban = input("\nLanjutkan pembaruan dengan git pull? (y/n): ").strip().lower()
+            jawaban = input(f"\nLanjutkan pembaruan dengan git pull? ({HIJAU}y{RESET}/{MERAH}n{RESET}): ").strip().lower()
             if jawaban == "y":
                 return True
             elif jawaban == "n":
-                print("Pembaruan dibatalkan oleh pengguna.")
+                print(f"{KUNING}Pembaruan dibatalkan oleh pengguna.{RESET}")
                 return False
             else:
-                print("Input tidak valid. Masukkan 'y' untuk setuju, atau 'n' untuk membatalkan.")
+                print(f"{MERAH}Input tidak valid. Masukkan 'y' untuk setuju, atau 'n' untuk membatalkan.{RESET}")
         except Exception as error:
-            print(f"[ERROR] Terjadi kesalahan saat input: {error}")
+            print(f"{MERAH}[ERROR] Terjadi kesalahan saat input: {error}{RESET}")
 
-def lakukan_git_pull():
-    """
-    Menjalankan perintah git pull untuk memperbarui repository.
-    Menampilkan notifikasi jika berhasil atau gagal.
-    """
-    print("\n[PROSES] Menjalankan git pull...")
+def lakukan_git_pull(branch="main"):
+    print(f"\n{KUNING}[PROSES]{RESET} Menjalankan git pull...")
     try:
-        subprocess.run(["git", "pull"], check=True)
-        print("[SUKSES] Pembaruan selesai.")
-    except subprocess.CalledProcessError:
-        print("[ERROR] Gagal melakukan git pull. Pastikan folder ini adalah repository git dan tidak ada konflik.")
+        result = subprocess.run(
+            ["git", "pull", "origin", branch],
+            check=True,
+            capture_output=True,
+            text=True
+        )
+        print(f"{HIJAU}[SUKSES] Pembaruan selesai!{RESET}")
+        print(result.stdout)
+    except subprocess.CalledProcessError as e:
+        print(f"{MERAH}[ERROR] Gagal melakukan git pull!{RESET}")
+        print(e.stderr if e.stderr else str(e))
     except Exception as error:
-        print(f"[ERROR] Terjadi kesalahan saat menjalankan git pull: {error}")
+        print(f"{MERAH}[ERROR] Terjadi kesalahan saat menjalankan git pull: {error}{RESET}")
 
-def proses_update():
-    """
-    Fungsi utama untuk proses update.
-    Bisa dipanggil dari script lain sebagai modul.
-    """
+def proses_update(branch="main"):
+    if not is_git_repo():
+        print(f"{MERAH}[ERROR] Folder ini bukan repository git!{RESET}")
+        return
     try:
         tampilkan_salam()
-        tampilkan_pembaruan()
+        tampilkan_pembaruan(branch)
         if konfirmasi_pembaruan():
-            lakukan_git_pull()
+            lakukan_git_pull(branch)
     except KeyboardInterrupt:
-        print("\n[INFO] Proses dibatalkan oleh pengguna (Ctrl+C).")
+        print(f"\n{KUNING}[INFO] Proses dibatalkan oleh pengguna (Ctrl+C).{RESET}")
     except Exception as error:
-        print(f"[ERROR] Terjadi kesalahan fatal: {error}")
+        print(f"{MERAH}[ERROR] Terjadi kesalahan fatal: {error}{RESET}")
 
 if __name__ == "__main__":
-    # Jika file dijalankan langsung, lakukan proses update
-    proses_update()
+    # Bisa menerima nama branch dari argumen
+    branch = sys.argv[1] if len(sys.argv) > 1 else "main"
+    proses_update(branch)
