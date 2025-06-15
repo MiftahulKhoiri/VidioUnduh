@@ -40,7 +40,7 @@ def tampilkan_pembaruan(branch="main"):
             print(hasil.stdout)
             return True
         else:
-            print(f"{HIJAU}Sudah menggunakan versi terbaru! Tidak ada pembaruan di remote.{RESET}")
+            print(f"{HIJAU} Tidak ada pembaruan Program sudah terbaru.{RESET}")
             return False
     except Exception as error:
         print(f"{MERAH}[ERROR] Gagal mengambil log pembaruan: {error}{RESET}")
@@ -86,7 +86,7 @@ def proses_update(branch="main"):
         ada_pembaruan = tampilkan_pembaruan(branch)
         if not ada_pembaruan:
             # Jika tidak ada pembaruan, selesai di sini
-            print(f"{HIJAU}Program sudah versi terbaru. Tidak perlu update.{RESET}")
+            print(f"{HIJAU}Program sudah versi terbaru.{RESET}")
             return
         if konfirmasi_pembaruan():
             lakukan_git_pull(branch)
@@ -94,7 +94,3 @@ def proses_update(branch="main"):
         print(f"\n{KUNING}[INFO] Proses dibatalkan oleh pengguna (Ctrl+C).{RESET}")
     except Exception as error:
         print(f"{MERAH}[ERROR] Terjadi kesalahan fatal: {error}{RESET}")
-
-if __name__ == "__main__":
-    branch = sys.argv[1] if len(sys.argv) > 1 else "main"
-    proses_update(branch)
