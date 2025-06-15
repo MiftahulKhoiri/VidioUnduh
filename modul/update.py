@@ -40,7 +40,7 @@ def tampilkan_pembaruan(branch="main"):
             print(hasil.stdout)
             return True
         else:
-            print(f"{HIJAU} Tidak ada pembaruan Program sudah terbaru.{RESET}")
+            print(f"{HIJAU} Tidak ada pembaruan.{RESET}")
             return False
     except Exception as error:
         print(f"{MERAH}[ERROR] Gagal mengambil log pembaruan: {error}{RESET}")
