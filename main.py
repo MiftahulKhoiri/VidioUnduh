@@ -14,8 +14,11 @@ def hapus_layar():
 
 def jalankan_menu_utama():
     """Menu utama aplikasi unduhan video."""
-    hapus_layar()
+    
     while True:
+        time.sleep(2)
+        hapus_layar()
+        tampilkan_logo()
         tampilkan_menu_utama()
         sumber = input(Fore.YELLOW + " Pilih sumber (1/2/3/0): ").strip()
         if sumber == "0":
@@ -67,10 +70,6 @@ def jalankan_menu_utama():
             print(Fore.RED + "Pilihan tidak dikenali. Silakan ulangi.")
 
 def main():
-    time.sleep(2)
-    hapus_layar()
-    tampilkan_logo()
-    time.sleep(2)
     jalankan_menu_utama()
 
 if __name__ == "__main__":
