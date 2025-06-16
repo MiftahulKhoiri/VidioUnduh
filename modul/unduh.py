@@ -112,10 +112,10 @@ def tampilkan_menu_utama():
     print(Fore.CYAN + "\n" + "="*44)
     print(Fore.MAGENTA + Style.BRIGHT + "     Selamat Datang di " + Fore.YELLOW + "VidioUnduh")
     print(Fore.CYAN + "="*44)
-    print(Fore.BLUE + " 1.", Fore.WHITE + "Youtube (kualitas maksimal, gabung video+audio dengan ffmpeg)")
-    print(Fore.BLUE + " 2.", Fore.WHITE + "Facebook (bisa pakai cookies untuk video privat)")
-    print(Fore.BLUE + " 3.", Fore.WHITE + "Twitter/X (bisa pakai cookies untuk video protected)")
-    print(Fore.RED + " 0. Keluar")
+    print(Fore.BLUE + " 1.", Fore.WHITE + "Youtube :")
+    print(Fore.BLUE + " 2.", Fore.WHITE + "Facebook :")
+    print(Fore.BLUE + " 3.", Fore.WHITE + "Twitter/X :")
+    print(Fore.RED + " 0. Keluar :")
     print(Fore.CYAN + "="*44)
 
 def menu_utama():
