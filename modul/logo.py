@@ -8,7 +8,7 @@ def tampilkan_logo():
 
     logo = f"""
 {CYAN}╔═══════════════════════╗
-{BLUE}║ {GREEN}Vidio{YELLOW}Unduh{BLUE}          ║
+{BLUE}║ {GREEN}Vidio {YELLOW}Unduh{BLUE}          ║
 {BLUE}║ {CYAN} Vidio Download Tools {BLUE}║
 {CYAN}╚═══════════════════════╝{RESET}
     """
