@@ -7,8 +7,8 @@ def pasang_dan_cek_modul(nama_file_requirements='requirements.txt'):
     Memasang dan mengecek modul-modul yang diperlukan sesuai daftar pada requirements.txt.
     Jika modul belum terpasang, maka akan diinstall otomatis.
     """
-    print("\n\033[1;36m=== Pengecekan Modul yang Dibutuhkan ===\033[0m")
-    print("\033[1;34mSedang memeriksa dan memasang modul-modul sesuai requirements...\033[0m")
+    print("\n\033[1;36m=== Mendapatkan Modul yang Dibutuhkan ===\033[0m")
+    print("\033[1;34mSedang memeriksa dan memasang modul-modul yang di butuhkan ...\033[0m")
     try:
         if not os.path.exists(nama_file_requirements):
             print(f"\033[1;31mFile {nama_file_requirements} tidak ditemukan.\033[0m")
