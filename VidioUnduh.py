@@ -1,5 +1,6 @@
 import sys
 import os
+import time  # Untuk menambah jeda waktu
 
 def hapus_layar():
     """Membersihkan layar terminal di semua OS."""
@@ -12,6 +13,7 @@ if MODUL_DIR not in sys.path:
     sys.path.append(MODUL_DIR)
 
 import update
+from modul import modul  # Import modul Anda
 
 def main():
     # Bersihkan layar sebelum mulai
@@ -19,8 +21,16 @@ def main():
     # Jalankan proses update terlebih dahulu
     update.proses_update()
 
-    # Setelah update selesai, jalankan main.py
-    # Import main.py sebagai modul
+    # Jeda waktu setelah update
+    time.sleep(2)
+
+    # Cek dan install modul, juga buat folder VidioDownload
+    modul.cek_modul_dan_folder()
+
+    # Jeda lagi setelah proses modul
+    time.sleep(2)
+
+    # Setelah update & cek modul, jalankan main.py
     try:
         import main as main_modul
         if hasattr(main_modul, 'main') and callable(main_modul.main):
