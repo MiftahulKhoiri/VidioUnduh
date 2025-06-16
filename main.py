@@ -8,9 +8,11 @@ def hapus_layar():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def main():
+    time.sleep(2)
     hapus_layar()
     tampilkan_logo()  # Memanggil fungsi logo dari modul/logo.py
-    print("main.py")
+    time.sleep(2)
+    menu_utama()
 
 if __name__ == "__main__":
     main()
