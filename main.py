@@ -12,11 +12,11 @@ def hapus_layar():
     """Membersihkan layar terminal di semua OS."""
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def jalankan_menu_utama():
+def main():
     """Menu utama aplikasi unduhan video."""
     
     while True:
-        time.sleep(2)
+        time.sleep(1)
         hapus_layar()
         tampilkan_logo()
         tampilkan_menu_utama()
@@ -68,9 +68,6 @@ def jalankan_menu_utama():
                 print(Fore.GREEN + "\nUnduhan selesai untuk semua video yang didaftar.\n")
         else:
             print(Fore.RED + "Pilihan tidak dikenali. Silakan ulangi.")
-
-def main():
-    jalankan_menu_utama()
 
 if __name__ == "__main__":
     main()
