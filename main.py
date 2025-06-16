@@ -1,6 +1,7 @@
 import os
 import time  # Untuk menambah jeda waktu
 from modul.logo import tampilkan_logo  # Import dari folder modul
+from modul.unduh import memu_utam
 
 def hapus_layar():
     """Membersihkan layar terminal di semua OS."""
