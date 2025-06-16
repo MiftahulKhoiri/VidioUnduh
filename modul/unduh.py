@@ -14,9 +14,9 @@ def buat_folder_unduhan():
         os.makedirs(NAMA_FOLDER)
 
 def nama_berkas_hasil(judul, ekstensi):
-    """Membuat nama file hasil unduhan agar tidak duplikat dan diberi tanggal."""
+    """Membuat nama file hasil unduhan agar tidak duplikat dan diberi tanggal lengkap (tanggal-bulan-tahun)."""
     sekarang = datetime.datetime.now()
-    tanggal = sekarang.strftime("%d%m")
+    tanggal = sekarang.strftime("%d-%m-%Y")  # Tanggal-bulan-tahun
     nama_dasar = f"{judul}_{tanggal}.{ekstensi}"
     urutan = 1
     nama_berkas = nama_dasar
