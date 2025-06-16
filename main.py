@@ -1,13 +1,19 @@
 import os
-import time  # Untuk menambah jeda waktu
-from modul.logo import tampilkan_logo  # Import dari folder modul
-from modul.unduh import menu_utama
+import time
+from colorama import Fore, Style, init
+
+from modul.logo import tampilkan_logo, tampilkan_menu_utama
+from modul.unduh import (
+    buat_folder_unduhan, unduh_video_audio_terpisah, unduh_facebook, unduh_twitter
+)
+
+init(autoreset=True)
 
 def hapus_layar():
     """Membersihkan layar terminal di semua OS."""
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def menu_utama():
+def jalankan_menu_utama():
     """Menu utama aplikasi unduhan video."""
     buat_folder_unduhan()
     while True:
@@ -64,9 +70,9 @@ def menu_utama():
 def main():
     time.sleep(2)
     hapus_layar()
-    tampilkan_logo()  # Memanggil fungsi logo dari modul/logo.py
+    tampilkan_logo()
     time.sleep(2)
-    menu_utama()
+    jalankan_menu_utama()
 
 if __name__ == "__main__":
     main()
