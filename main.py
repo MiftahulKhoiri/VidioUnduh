@@ -3,8 +3,7 @@ import time
 from colorama import Fore, Style, init
 
 from modul.logo import tampilkan_logo, tampilkan_menu_utama
-from modul.unduh import (
-    buat_folder_unduhan, unduh_video_audio_terpisah, unduh_facebook, unduh_twitter
+from modul.unduh import (unduh_video_audio_terpisah, unduh_facebook, unduh_twitter
 )
 
 init(autoreset=True)
@@ -15,7 +14,7 @@ def hapus_layar():
 
 def jalankan_menu_utama():
     """Menu utama aplikasi unduhan video."""
-    buat_folder_unduhan()
+    hapus_layar()
     while True:
         tampilkan_menu_utama()
         sumber = input(Fore.YELLOW + " Pilih sumber (1/2/3/0): ").strip()
