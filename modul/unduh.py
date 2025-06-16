@@ -110,7 +110,7 @@ def unduh_twitter(alamat, cookies_path=None, resolusi=None):
 def tampilkan_menu_utama():
     """Menampilkan menu utama dengan tampilan menarik dan warna."""
     print(Fore.CYAN + "\n" + "="*44)
-    print(Fore.MAGENTA + Style.BRIGHT + "     Selamat Datang di " + Fore.YELLOW + "VidioUnduh")
+    print(Fore.MAGENTA + Style.BRIGHT + "     Selamat Datang di " + Fore.YELLOW + "Vidio Unduh")
     print(Fore.CYAN + "="*44)
     print(Fore.BLUE + " 1.", Fore.WHITE + "Youtube :")
     print(Fore.BLUE + " 2.", Fore.WHITE + "Facebook :")
