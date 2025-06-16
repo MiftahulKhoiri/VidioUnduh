@@ -1,4 +1,5 @@
-# logo.py
+from colorama import Fore, Style
+
 def tampilkan_logo():
     CYAN = '\033[96m'
     BLUE = '\033[94m'
