@@ -22,6 +22,7 @@ def tampilkan_salam():
     print(f"{'='*40}{RESET}")
 
 def tampilkan_pembaruan(branch="main"):
+    print("cek pembaruan program ")
     print(f"\n{KUNING}[INFO]{RESET} Daftar pembaruan terbaru di repository:")
     try:
         subprocess.run(
