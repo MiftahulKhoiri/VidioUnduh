@@ -23,6 +23,7 @@ def main():
 
     # Jeda waktu setelah update
     time.sleep(2)
+    hapus_layar()
 
     # Cek dan install modul, juga buat folder VidioDownload
     modul.cek_modul_dan_folder()
