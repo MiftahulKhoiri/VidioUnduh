@@ -18,7 +18,7 @@ def is_git_repo():
 
 def tampilkan_salam():
     print(f"{BIRU}{'='*40}")
-    print("=   Update pembaruan script. =")
+    print("=       Update pembaruan script     =")
     print(f"{'='*40}{RESET}")
 
 def tampilkan_pembaruan(branch="main"):
