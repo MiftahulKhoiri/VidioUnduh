@@ -6,12 +6,6 @@ from colorama import init, Fore, Style
 
 init(autoreset=True)
 
-NAMA_FOLDER = 'VidioDownload'
-
-def buat_folder_unduhan():
-    """Membuat folder penyimpanan hasil unduhan jika belum ada."""
-    if not os.path.exists(NAMA_FOLDER):
-        os.makedirs(NAMA_FOLDER)
 
 def nama_berkas_hasil(judul, ekstensi):
     """Membuat nama file hasil unduhan agar tidak duplikat dan diberi tanggal lengkap (tanggal-bulan-tahun)."""
