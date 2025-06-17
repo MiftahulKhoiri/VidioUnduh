@@ -25,7 +25,7 @@ def main():
             hapus_layar()
             time.sleep(1)
             tampilkan_logo()
-            print(Fore.GREEN + "\nTerima kasih telah menggunakan VidioUnduh!\n")
+            print(Fore.GREEN + "\nTerima kasih telah menggunakan program VidioUnduh!\n")
             break
         elif sumber in ["1", "2", "3"]:
             while True:
