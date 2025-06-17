@@ -3,8 +3,9 @@ import time
 from colorama import Fore, Style, init
 
 from modul.logo import tampilkan_logo, tampilkan_menu_utama
-from modul.unduh import (unduh_video_audio_terpisah, unduh_facebook, unduh_twitter
-)
+from modul.youtube import unduh_video_audio_terpisah
+from modul.fb import unduh_facebook
+from modul.twiter import unduh_twitter
 
 init(autoreset=True)
 
