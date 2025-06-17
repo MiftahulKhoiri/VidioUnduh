@@ -1,4 +1,5 @@
 import os
+import sys
 import datetime
 import subprocess
 from yt_dlp import YoutubeDL
@@ -6,6 +7,36 @@ from colorama import init, Fore, Style
 
 init(autoreset=True)
 
+# Ganti nama folder output jika perlu
+NAMA_FOLDER = "VidioDownload"
+os.makedirs(NAMA_FOLDER, exist_ok=True)
+
+# Progress bar warna-warni
+def print_progress_bar(percent, width=32, color=Fore.GREEN, msg=""):
+    fill_len = int(width * percent // 100)
+    empty_len = width - fill_len
+    bar = color + '█' * fill_len + Style.RESET_ALL + '░' * empty_len
+    progress = f"{percent:6.2f}%"
+    sys.stdout.write(f"\r{bar} {progress} {msg}")
+    sys.stdout.flush()
+    if percent >= 100:
+        print()
+
+def yt_progress_hook(status):
+    if status['status'] == 'downloading':
+        percent = float(status.get('percent', 0.0))
+        speed = status.get('speed', 0)
+        eta = status.get('eta', 0)
+        color = (
+            Fore.RED if percent < 33 else
+            Fore.YELLOW if percent < 66 else
+            Fore.GREEN if percent < 99.99 else
+            Fore.CYAN
+        )
+        msg = f"Speed: {speed/1024:.1f} KB/s ETA: {eta}s"
+        print_progress_bar(percent, width=32, color=color, msg=msg)
+    elif status['status'] == 'finished':
+        print_progress_bar(100, width=32, color=Fore.CYAN, msg="Done!")
 
 def nama_berkas_hasil(judul, ekstensi):
     """Membuat nama file hasil unduhan agar tidak duplikat dan diberi tanggal lengkap (tanggal-bulan-tahun)."""
@@ -28,13 +59,15 @@ def unduh_video_audio_terpisah(alamat, resolusi=None):
             'format': f"bestvideo[height<={resolusi}]" if resolusi else "bestvideo",
             'outtmpl': temp_video,
             'noplaylist': True,
-            'quiet': True
+            'quiet': True,
+            'progress_hooks': [yt_progress_hook],
         }
         opsi_audio = {
             'format': "bestaudio",
             'outtmpl': temp_audio,
             'noplaylist': True,
-            'quiet': True
+            'quiet': True,
+            'progress_hooks': [yt_progress_hook],
         }
         print(Fore.YELLOW + "Mengunduh video...")
         with YoutubeDL(opsi_video) as ydl:
@@ -74,7 +107,8 @@ def unduh_facebook(alamat, cookies_path=None, resolusi=None):
             'format': f"bestvideo[height<={resolusi}]+bestaudio/best[height<={resolusi}]" if resolusi else "bestvideo+bestaudio/best",
             'outtmpl': os.path.join(NAMA_FOLDER, '%(title)s.%(ext)s'),
             'noplaylist': True,
-            'quiet': False
+            'quiet': False,
+            'progress_hooks': [yt_progress_hook],
         }
         if cookies_path:
             opsi['cookiefile'] = cookies_path
@@ -91,7 +125,8 @@ def unduh_twitter(alamat, cookies_path=None, resolusi=None):
             'format': f"bestvideo[height<={resolusi}]+bestaudio/best[height<={resolusi}]" if resolusi else "bestvideo+bestaudio/best",
             'outtmpl': os.path.join(NAMA_FOLDER, '%(title)s.%(ext)s'),
             'noplaylist': True,
-            'quiet': False
+            'quiet': False,
+            'progress_hooks': [yt_progress_hook],
         }
         if cookies_path:
             opsi['cookiefile'] = cookies_path
