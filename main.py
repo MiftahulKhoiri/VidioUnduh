@@ -23,7 +23,8 @@ def main():
         sumber = input(Fore.YELLOW + " Pilih sumber (1/2/3/0): ").strip()
         if sumber == "0":
             hapus_layar()
-            time.sleep(2)
+            time.sleep(1)
+            tampilkan_logo()
             print(Fore.GREEN + "\nTerima kasih telah menggunakan VidioUnduh!\n")
             break
         elif sumber in ["1", "2", "3"]:
