@@ -33,7 +33,7 @@ def main():
                 print(Fore.BLUE + " 1. Unduh 1 video")
                 print(Fore.BLUE + " 2. Unduh banyak video")
                 print(Fore.RED + " 0. Kembali ke menu utama")
-                mode = input(Fore.YELLOW + " Pilih mode (1/2/0): ").strip().lower()
+                mode = input(Fore.YELLOW + " Pilihan (no:0/1/2) : ").strip().lower()
                 if mode == "0":
                     break
                 elif mode not in ["1", "2"]:
