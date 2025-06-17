@@ -6,12 +6,43 @@ from yt_dlp import YoutubeDL
 from colorama import init, Fore, Style
 
 init(autoreset=True)
-
-# Ganti nama folder output jika perlu
 NAMA_FOLDER = "VidioDownload"
 os.makedirs(NAMA_FOLDER, exist_ok=True)
 
-# Progress bar warna-warni
+def tanggal_hari_ini():
+    return datetime.datetime.now().strftime("%d-%m-%Y")
+
+def safe_filename(name):
+    return "".join(c for c in name if c.isalnum() or c in " ._-").rstrip()
+
+def nama_file_unik(judul, ekstensi, tanggal):
+    judul = safe_filename(judul)
+    nama_dasar = f"{judul}_{tanggal}.{ekstensi}"
+    nama_file = nama_dasar
+    idx = 1
+    while os.path.exists(os.path.join(NAMA_FOLDER, nama_file)):
+        if idx == 1:
+            nama_file = f"{judul}_{tanggal} (copy).{ekstensi}"
+        else:
+            nama_file = f"{judul}_{tanggal} (copy {idx}).{ekstensi}"
+        idx += 1
+    return nama_file
+
+def cek_file_dan_konfirmasi(judul, ekstensi, tanggal):
+    nama_file = f"{safe_filename(judul)}_{tanggal}.{ekstensi}"
+    path_file = os.path.join(NAMA_FOLDER, nama_file)
+    if os.path.exists(path_file):
+        jawab = input(
+            f"{Fore.YELLOW}File sudah ada: {nama_file}. Lanjutkan download dan simpan dengan nama baru? (y/n): "
+        ).lower().strip()
+        if jawab == "y":
+            return nama_file_unik(judul, ekstensi, tanggal)
+        else:
+            print(Fore.CYAN + "Download dibatalkan.")
+            return None
+    else:
+        return nama_file
+
 def print_progress_bar(percent, width=32, color=Fore.GREEN, msg=""):
     fill_len = int(width * percent // 100)
     empty_len = width - fill_len
@@ -38,20 +69,7 @@ def yt_progress_hook(status):
     elif status['status'] == 'finished':
         print_progress_bar(100, width=32, color=Fore.CYAN, msg="Done!")
 
-def nama_berkas_hasil(judul, ekstensi):
-    """Membuat nama file hasil unduhan agar tidak duplikat dan diberi tanggal lengkap (tanggal-bulan-tahun)."""
-    sekarang = datetime.datetime.now()
-    tanggal = sekarang.strftime("%d-%m-%Y")  # Tanggal-bulan-tahun
-    nama_dasar = f"{judul}_{tanggal}.{ekstensi}"
-    urutan = 1
-    nama_berkas = nama_dasar
-    while os.path.exists(os.path.join(NAMA_FOLDER, nama_berkas)):
-        nama_berkas = f"{judul}_{tanggal}_{urutan}.{ekstensi}"
-        urutan += 1
-    return nama_berkas
-
 def unduh_video_audio_terpisah(alamat, resolusi=None):
-    """Mengunduh video dan audio terpisah lalu menggabungkannya dengan ffmpeg."""
     try:
         temp_video = "temp_video.mp4"
         temp_audio = "temp_audio.m4a"
@@ -76,8 +94,13 @@ def unduh_video_audio_terpisah(alamat, resolusi=None):
         print(Fore.YELLOW + "Mengunduh audio...")
         with YoutubeDL(opsi_audio) as ydl:
             ydl.download([alamat])
-        nama_berkas = nama_berkas_hasil(judul, "mp4")
-        hasil_output = os.path.join(NAMA_FOLDER, nama_berkas)
+        tanggal = tanggal_hari_ini()
+        nama_file = cek_file_dan_konfirmasi(judul, "mp4", tanggal)
+        if not nama_file:
+            os.remove(temp_video)
+            os.remove(temp_audio)
+            return  # Batal
+        hasil_output = os.path.join(NAMA_FOLDER, nama_file)
         print(Fore.CYAN + "Menggabungkan video dan audio dengan ffmpeg...")
         perintah = [
             'ffmpeg', '-y',
@@ -101,11 +124,19 @@ def unduh_video_audio_terpisah(alamat, resolusi=None):
         print(Fore.RED + f"Detail error: {e}")
 
 def unduh_facebook(alamat, cookies_path=None, resolusi=None):
-    """Mengunduh video dari Facebook. Bisa menggunakan cookies jika video private/protected."""
     try:
+        with YoutubeDL({'quiet': True}) as ydl:
+            info = ydl.extract_info(alamat, download=False)
+            judul = info.get('title', 'facebook_video')
+            ekstensi = info.get('ext', 'mp4')
+        tanggal = tanggal_hari_ini()
+        nama_file = cek_file_dan_konfirmasi(judul, ekstensi, tanggal)
+        if not nama_file:
+            return  # Batal
+        hasil_output = os.path.join(NAMA_FOLDER, nama_file)
         opsi = {
             'format': f"bestvideo[height<={resolusi}]+bestaudio/best[height<={resolusi}]" if resolusi else "bestvideo+bestaudio/best",
-            'outtmpl': os.path.join(NAMA_FOLDER, '%(title)s.%(ext)s'),
+            'outtmpl': hasil_output,
             'noplaylist': True,
             'quiet': False,
             'progress_hooks': [yt_progress_hook],
@@ -114,16 +145,24 @@ def unduh_facebook(alamat, cookies_path=None, resolusi=None):
             opsi['cookiefile'] = cookies_path
         with YoutubeDL(opsi) as ydl:
             ydl.download([alamat])
-        print(Fore.GREEN + "Download Facebook sukses.")
+        print(Fore.GREEN + f"Download Facebook sukses. File: {hasil_output}")
     except Exception as e:
         print(Fore.RED + f"Download Facebook gagal! {e}")
 
 def unduh_twitter(alamat, cookies_path=None, resolusi=None):
-    """Mengunduh video dari Twitter/X. Bisa menggunakan cookies jika video dari akun private/protected."""
     try:
+        with YoutubeDL({'quiet': True}) as ydl:
+            info = ydl.extract_info(alamat, download=False)
+            judul = info.get('title', 'twitter_video')
+            ekstensi = info.get('ext', 'mp4')
+        tanggal = tanggal_hari_ini()
+        nama_file = cek_file_dan_konfirmasi(judul, ekstensi, tanggal)
+        if not nama_file:
+            return  # Batal
+        hasil_output = os.path.join(NAMA_FOLDER, nama_file)
         opsi = {
             'format': f"bestvideo[height<={resolusi}]+bestaudio/best[height<={resolusi}]" if resolusi else "bestvideo+bestaudio/best",
-            'outtmpl': os.path.join(NAMA_FOLDER, '%(title)s.%(ext)s'),
+            'outtmpl': hasil_output,
             'noplaylist': True,
             'quiet': False,
             'progress_hooks': [yt_progress_hook],
@@ -132,6 +171,11 @@ def unduh_twitter(alamat, cookies_path=None, resolusi=None):
             opsi['cookiefile'] = cookies_path
         with YoutubeDL(opsi) as ydl:
             ydl.download([alamat])
-        print(Fore.GREEN + "Download Twitter sukses.")
+        print(Fore.GREEN + f"Download Twitter sukses. File: {hasil_output}")
     except Exception as e:
         print(Fore.RED + f"Download Twitter gagal! {e}")
+
+# Contoh penggunaan:
+# unduh_video_audio_terpisah("https://www.youtube.com/watch?v=...")
+# unduh_facebook("https://www.facebook.com/...", cookies_path="cookies.txt")
+# unduh_twitter("https://twitter.com/...", cookies_path="cookies.txt")
