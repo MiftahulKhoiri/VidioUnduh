@@ -6,7 +6,7 @@ from unduh import (print_progress_bar, yt_progress_hook, nama_file_unik, safe_fi
 
 init(autoreset=True)
 NAMA_FOLDER = "VidioDownload"
-os.makedirs(NAMA_FOLDER, exist_ok=True)
+#os.makedirs(NAMA_FOLDER, exist_ok=True)
 
 def hapus_file_sementara(*file_paths):
     for file_path in file_paths:
