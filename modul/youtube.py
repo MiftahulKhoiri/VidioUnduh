@@ -1,111 +1,58 @@
 import os
-import sys
-import datetime
 import subprocess
-from colorama import init, Fore, Style
 from yt_dlp import YoutubeDL
+from colorama import init, Fore, Style
+from unduh import (print_progress_bar, yt_progress_hook, nama_file_unik, safe_filename, cek_file_dan_konfirmasi, tanggal_hari_ini)
 
 init(autoreset=True)
-NAMA_FOLDER = "VideoDownload"
+NAMA_FOLDER = "VidioDownload"
 os.makedirs(NAMA_FOLDER, exist_ok=True)
 
-def tampilkan_pilihan_kualitas(info_video):
-    """
-    Menampilkan daftar kualitas video yang tersedia dan meminta input pengguna
-    Mengembalikan format_id yang dipilih
-    """
-    print("\n" + Fore.CYAN + "Pilihan Kualitas Video:")
-    
-    # Dapatkan semua format video yang tersedia
-    formats = info_video.get('formats', [])
-    video_formats = []
-    
-    # Filter hanya format video (ada 'height' dan 'ext')
-    for f in formats:
-        if f.get('height') and f.get('ext'):
-            video_formats.append(f)
-    
-    # Urutkan dari kualitas tertinggi ke terendah
-    video_formats.sort(key=lambda x: (-x['height'], x['ext']))
-    
-    # Tampilkan pilihan
-    pilihan = {}
-    for idx, fmt in enumerate(video_formats, 1):
-        res = fmt['height']
-        ext = fmt['ext']
-        fps = fmt.get('fps', '?')
-        note = "(audio only)" if fmt.get('acodec') != 'none' and fmt.get('vcodec') == 'none' else ""
-        print(f"{idx}. {res}p {ext.upper()} {fps}fps {note}")
-        pilihan[idx] = fmt['format_id']
-    
-    # Minta input pengguna
-    while True:
-        try:
-            pilih = int(input("\nPilih kualitas video (nomor): "))
-            if pilih in pilihan:
-                return pilihan[pilih]
-            else:
-                print(Fore.RED + "Pilihan tidak valid!")
-        except ValueError:
-            print(Fore.RED + "Masukkan angka saja!")
-
-def unduh_video_audio_terpisah(alamat):
-    """
-    Fungsi utama untuk mendownload video dengan pilihan kualitas
-    """
-    temp_video = None
-    temp_audio = None
-    
+def unduh_video_audio_terpisah(alamat, resolusi=None):
     try:
-        # Langkah 1: Dapatkan info video terlebih dahulu untuk pilihan kualitas
-        with YoutubeDL({'quiet': True}) as ydl:
-            info_video = ydl.extract_info(alamat, download=False)
-            judul = info_video.get('title', 'video')
-            
-            # Tampilkan pilihan kualitas
-            format_id = tampilkan_pilihan_kualitas(info_video)
-        
         # Template nama file sementara
         temp_video_tpl = "temp_video.%(ext)s"
         temp_audio_tpl = "temp_audio.%(ext)s"
 
-        # Konfigurasi untuk download video dengan kualitas terpilih
         opsi_video = {
-            'format': format_id,
+            'format': f"bestvideo[height<={resolusi}]" if resolusi else "bestvideo",
             'outtmpl': temp_video_tpl,
+            'noplaylist': True,
+            'quiet': True,
             'progress_hooks': [yt_progress_hook],
         }
-        
-        # Konfigurasi untuk download audio terbaik
         opsi_audio = {
-            'format': 'bestaudio',
+            'format': "bestaudio",
             'outtmpl': temp_audio_tpl,
+            'noplaylist': True,
+            'quiet': True,
             'progress_hooks': [yt_progress_hook],
         }
 
-        # Langkah 2: Download video dengan kualitas terpilih
-        print(Fore.YELLOW + "\nMengunduh video...")
+        print(Fore.YELLOW + "Mengunduh video...")
         with YoutubeDL(opsi_video) as ydl:
-            ydl.download([alamat])
-            temp_video = f"temp_video.{info_video['ext']}"
+            info_video = ydl.extract_info(alamat, download=True)
+            video_ext = info_video.get('ext', 'mp4')
+            judul = info_video.get('title', 'video')
+            temp_video = f"temp_video.{video_ext}"
 
-        # Langkah 3: Download audio terpisah
-        print(Fore.YELLOW + "\nMengunduh audio...")
+        print(Fore.YELLOW + "Mengunduh audio...")
         with YoutubeDL(opsi_audio) as ydl:
-            ydl.download([alamat])
-            temp_audio = "temp_audio.m4a"
+            info_audio = ydl.extract_info(alamat, download=True)
+            audio_ext = info_audio.get('ext', 'm4a')
+            temp_audio = f"temp_audio.{audio_ext}"
 
-        # Langkah 4: Konfirmasi nama file output
         tanggal = tanggal_hari_ini()
         nama_file = cek_file_dan_konfirmasi(judul, "mp4", tanggal)
         if not nama_file:
-            return  # Jika user membatalkan
+            if os.path.exists(temp_video): os.remove(temp_video)
+            if os.path.exists(temp_audio): os.remove(temp_audio)
+            return  # Batal
 
-        # Langkah 5: Gabungkan video dan audio
         hasil_output = os.path.join(NAMA_FOLDER, nama_file)
-        print(Fore.CYAN + "\nMenggabungkan video dan audio...")
-        
-        perintah_ffmpeg = [
+        print(Fore.CYAN + "Menggabungkan video dan audio dengan ffmpeg...")
+
+        perintah = [
             'ffmpeg', '-y',
             '-i', temp_video,
             '-i', temp_audio,
@@ -114,24 +61,15 @@ def unduh_video_audio_terpisah(alamat):
             '-strict', 'experimental',
             hasil_output
         ]
-        
-        try:
-            subprocess.run(perintah_ffmpeg, check=True, 
-                          stdout=subprocess.PIPE, 
-                          stderr=subprocess.PIPE)
-            print(Fore.GREEN + f"\nDownload selesai! File tersimpan di: {hasil_output}")
-        except subprocess.CalledProcessError as e:
-            print(Fore.RED + "\nGagal menggabungkan video dan audio!")
-            print(Fore.RED + f"Error: {e.stderr.decode('utf-8')}")
-            
-    except Exception as e:
-        print(Fore.RED + f"\nTerjadi error: {str(e)}")
-    finally:
-        # Bersihkan file temporary
-        for temp_file in [temp_video, temp_audio]:
-            if temp_file and os.path.exists(temp_file):
-                os.remove(temp_file)
+        proses = subprocess.run(perintah, capture_output=True, text=True)
+        if proses.returncode != 0:
+            print(Fore.RED + "Terjadi kesalahan saat menggabungkan video dan audio!")
+            print(proses.stderr)
+            return
 
-# Fungsi-fungsi pendukung lainnya tetap sama seperti sebelumnya
-# (tanggal_hari_ini, safe_filename, nama_file_unik, 
-#  cek_file_dan_konfirmasi, print_progress_bar, yt_progress_hook)
+        if os.path.exists(temp_video): os.remove(temp_video)
+        if os.path.exists(temp_audio): os.remove(temp_audio)
+        print(Fore.GREEN + f"Video hasil gabungan disimpan di: {hasil_output}")
+    except Exception as e:
+        print(Fore.RED + "Gagal mengunduh atau menggabungkan video/audio!")
+        print(Fore.RED + f"Detail error: {e}")
