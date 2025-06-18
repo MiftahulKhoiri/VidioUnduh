@@ -5,7 +5,7 @@ from unduh import (print_progress_bar,yt_progress_hook,nama_file_unik,safe_filen
 
 init(autoreset=True)
 NAMA_FOLDER = "VidioDownload"
-os.makedirs(NAMA_FOLDER, exist_ok=True)
+#os.makedirs(NAMA_FOLDER, exist_ok=True)
 
 def unduh_facebook(alamat, cookies_path=None, resolusi=None):
     try:
