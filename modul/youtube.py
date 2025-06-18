@@ -8,6 +8,14 @@ init(autoreset=True)
 NAMA_FOLDER = "VidioDownload"
 os.makedirs(NAMA_FOLDER, exist_ok=True)
 
+def hapus_file_sementara(*file_paths):
+    for file_path in file_paths:
+        if os.path.exists(file_path):
+            try:
+                os.remove(file_path)
+            except Exception as e:
+                print(Fore.RED + f"Gagal menghapus file sementara {file_path}: {e}")
+
 def unduh_video_audio_terpisah(alamat, resolusi=None):
     try:
         # Template nama file sementara
@@ -45,8 +53,7 @@ def unduh_video_audio_terpisah(alamat, resolusi=None):
         tanggal = tanggal_hari_ini()
         nama_file = cek_file_dan_konfirmasi(judul, "mp4", tanggal)
         if not nama_file:
-            if os.path.exists(temp_video): os.remove(temp_video)
-            if os.path.exists(temp_audio): os.remove(temp_audio)
+            hapus_file_sementara(temp_video, temp_audio)
             return  # Batal
 
         hasil_output = os.path.join(NAMA_FOLDER, nama_file)
@@ -65,11 +72,16 @@ def unduh_video_audio_terpisah(alamat, resolusi=None):
         if proses.returncode != 0:
             print(Fore.RED + "Terjadi kesalahan saat menggabungkan video dan audio!")
             print(proses.stderr)
+            hapus_file_sementara(temp_video, temp_audio)
             return
 
-        if os.path.exists(temp_video): os.remove(temp_video)
-        if os.path.exists(temp_audio): os.remove(temp_audio)
+        hapus_file_sementara(temp_video, temp_audio)
         print(Fore.GREEN + f"Video hasil gabungan disimpan di: {hasil_output}")
     except Exception as e:
         print(Fore.RED + "Gagal mengunduh atau menggabungkan video/audio!")
         print(Fore.RED + f"Detail error: {e}")
+        # Upayakan hapus file sementara jika gagal proses
+        try:
+            hapus_file_sementara(temp_video, temp_audio)
+        except:
+            pass
