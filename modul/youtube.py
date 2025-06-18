@@ -11,7 +11,7 @@ from unduh import (
 
 init(autoreset=True)
 NAMA_FOLDER = "VidioDownload"
-#os.makedirs(NAMA_FOLDER, exist_ok=True)
+os.makedirs(NAMA_FOLDER, exist_ok=True)
 
 def hapus_file_sementara(*file_paths):
     for file_path in file_paths:
@@ -21,15 +21,43 @@ def hapus_file_sementara(*file_paths):
             except Exception as e:
                 print(Fore.RED + f"Gagal menghapus file sementara {file_path}: {e}")
 
-def tampilkan_progress_ffmpeg(perintah):
+def get_video_duration(file_path):
+    # Ambil durasi video (detik) dengan ffprobe
+    try:
+        result = subprocess.run(
+            ['ffprobe', '-v', 'error', '-show_entries', 'format=duration',
+             '-of', 'default=noprint_wrappers=1:nokey=1', file_path],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+        )
+        return float(result.stdout.strip())
+    except Exception:
+        return None
+
+def parse_ffmpeg_time(time_str):
+    # Ubah string time ffmpeg ke detik
+    if not time_str:
+        return 0.0
+    try:
+        h, m, s = time_str.split(':')
+        return float(h) * 3600 + float(m) * 60 + float(s)
+    except Exception:
+        return 0.0
+
+def tampilkan_progress_ffmpeg(perintah, sumber_video):
+    total_duration = get_video_duration(sumber_video)
     proses = subprocess.Popen(perintah, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
     regex_time = re.compile(r'time=(\d+:\d+:\d+\.\d+)')
+    last_percent = -1
     for line in proses.stdout:
         line = line.strip()
         match = regex_time.search(line)
-        if match:
-            sys.stdout.write(f"\rProgress ffmpeg: {match.group(1)}")
-            sys.stdout.flush()
+        if match and total_duration:
+            now_sec = parse_ffmpeg_time(match.group(1))
+            percent = int((now_sec / total_duration) * 100)
+            if percent != last_percent:
+                sys.stdout.write(f"\rProgress ffmpeg: {percent}%")
+                sys.stdout.flush()
+                last_percent = percent
     proses.wait()
     print()
     return proses.returncode
@@ -121,7 +149,8 @@ def unduh_video_audio_terpisah(alamat, resolusi=None):
             '-strict', 'experimental',
             hasil_output
         ]
-        retcode = tampilkan_progress_ffmpeg(perintah)
+        # Menggunakan progress ffmpeg secara persentase
+        retcode = tampilkan_progress_ffmpeg(perintah, temp_video)
         if retcode != 0:
             print(Fore.RED + "Terjadi kesalahan saat menggabungkan video dan audio!")
             hapus_file_sementara(temp_video, temp_audio)
@@ -136,3 +165,7 @@ def unduh_video_audio_terpisah(alamat, resolusi=None):
             hapus_file_sementara(temp_video, temp_audio)
         except:
             pass
+
+if __name__ == "__main__":
+    url = input("Masukkan URL YouTube: ")
+    unduh_video_audio_terpisah(url)
