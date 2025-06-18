@@ -1,12 +1,14 @@
 import os
 import subprocess
+import re
+import sys
 from yt_dlp import YoutubeDL
 from colorama import init, Fore, Style
 from unduh import (print_progress_bar, yt_progress_hook, nama_file_unik, safe_filename, cek_file_dan_konfirmasi, tanggal_hari_ini)
 
 init(autoreset=True)
 NAMA_FOLDER = "VidioDownload"
-#os.makedirs(NAMA_FOLDER, exist_ok=True)
+# os.makedirs(NAMA_FOLDER, exist_ok=True)
 
 def hapus_file_sementara(*file_paths):
     for file_path in file_paths:
@@ -16,9 +18,22 @@ def hapus_file_sementara(*file_paths):
             except Exception as e:
                 print(Fore.RED + f"Gagal menghapus file sementara {file_path}: {e}")
 
+def tampilkan_progress_ffmpeg(perintah):
+    # Jalankan ffmpeg dan tampilkan progress time di terminal
+    proses = subprocess.Popen(perintah, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+    regex_time = re.compile(r'time=(\d+:\d+:\d+\.\d+)')
+    for line in proses.stdout:
+        line = line.strip()
+        match = regex_time.search(line)
+        if match:
+            sys.stdout.write(f"\rProgress ffmpeg: {match.group(1)}")
+            sys.stdout.flush()
+    proses.wait()
+    print()  # Untuk newline setelah selesai
+    return proses.returncode
+
 def unduh_video_audio_terpisah(alamat, resolusi=None):
     try:
-        # Template nama file sementara
         temp_video_tpl = "temp_video.%(ext)s"
         temp_audio_tpl = "temp_audio.%(ext)s"
 
@@ -68,10 +83,10 @@ def unduh_video_audio_terpisah(alamat, resolusi=None):
             '-strict', 'experimental',
             hasil_output
         ]
-        proses = subprocess.run(perintah, capture_output=True, text=True)
-        if proses.returncode != 0:
+        # Menggunakan progress ffmpeg secara realtime
+        retcode = tampilkan_progress_ffmpeg(perintah)
+        if retcode != 0:
             print(Fore.RED + "Terjadi kesalahan saat menggabungkan video dan audio!")
-            print(proses.stderr)
             hapus_file_sementara(temp_video, temp_audio)
             return
 
@@ -80,7 +95,6 @@ def unduh_video_audio_terpisah(alamat, resolusi=None):
     except Exception as e:
         print(Fore.RED + "Gagal mengunduh atau menggabungkan video/audio!")
         print(Fore.RED + f"Detail error: {e}")
-        # Upayakan hapus file sementara jika gagal proses
         try:
             hapus_file_sementara(temp_video, temp_audio)
         except:
