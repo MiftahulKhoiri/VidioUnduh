@@ -10,7 +10,7 @@ def tampilkan_logo():
    
     logo = f"""
 {CYAN}╔═══════════════════════╗
-{BLUE}║ {GREEN}Vidio {YELLOW}Unduh{BLUE}           ║
+{BLUE}║ {GREEN}Vidio Unduh{BLUE}           ║
 {BLUE}║ {CYAN} Vidio Download Tools {BLUE}║
 {CYAN}╚═══════════════════════╝{RESET}
     """
@@ -20,7 +20,7 @@ def tampilkan_logo():
 def tampilkan_menu_utama():
     """Menampilkan menu utama dengan tampilan menarik dan warna."""
     print(Fore.CYAN + "\n" + "="*44)
-    print(Fore.MAGENTA + Style.BRIGHT + "     Selamat Datang di " + Fore.YELLOW + "Vidio Unduh")
+    print(Fore.MAGENTA + Style.BRIGHT + "     Selamat Datang di " + GREEN + "Vidio Unduh")
     print(Fore.CYAN + "="*44)
     print(Fore.BLUE + " 1.", Fore.WHITE + "Youtube :")
     print(Fore.BLUE + " 2.", Fore.WHITE + "Facebook :")
