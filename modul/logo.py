@@ -1,5 +1,17 @@
 from colorama import Fore, Style
 
+try:
+    from colorama import Fore, Style, init as colorama_init
+    colorama_init()
+    HIJAU = Fore.GREEN
+    MERAH = Fore.RED
+    KUNING = Fore.YELLOW
+    BIRU = Fore.BLUE
+    RESET = Style.RESET_ALL
+except ImportError:
+    HIJAU = MERAH = KUNING = BIRU = RESET = ""
+
+
 def tampilkan_logo():
     CYAN = '\033[96m'
     BLUE = '\033[94m'
