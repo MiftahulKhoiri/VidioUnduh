@@ -1,34 +1,28 @@
-from colorama import Fore, Style
+from colorama import Fore, Style, init
 
-CYAN = '\033[96m'
-BLUE = '\033[94m'
-GREEN = '\033[92m'
-YELLOW = '\033[93m'
-RESET = '\033[0m'
+init(autoreset=True)  # Agar warna otomatis reset setiap print
 
 def tampilkan_logo():
-   
-    logo = f"""
-{CYAN}╔═══════════════════════╗
-{BLUE}║ {GREEN}Vidio Unduh{BLUE}           ║
-{BLUE}║ {CYAN} Vidio Download Tools {BLUE}║
-{CYAN}╚═══════════════════════╝{RESET}
-    """
+    logo = (
+        f"{Fore.CYAN}╔═══════════════════════╗\n"
+        f"{Fore.BLUE}║ {Fore.GREEN}Vidio Unduh{Fore.BLUE}           ║\n"
+        f"{Fore.BLUE}║ {Fore.CYAN}Vidio Download Tools {Fore.BLUE}║\n"
+        f"{Fore.CYAN}╚═══════════════════════╝{Style.RESET_ALL}"
+    )
     print(logo)
-
 
 def tampilkan_menu_utama():
     """Menampilkan menu utama dengan tampilan menarik dan warna."""
     print(Fore.CYAN + "\n" + "="*44)
-    print(Fore.MAGENTA + Style.BRIGHT + "     Selamat Datang di " + GREEN + "Vidio Unduh")
+    print(Fore.MAGENTA + Style.BRIGHT + "     Selamat Datang di " + Fore.GREEN + "Vidio Unduh")
     print(Fore.CYAN + "="*44)
-    print(Fore.BLUE + " 1.", Fore.WHITE + "Youtube :")
-    print(Fore.BLUE + " 2.", Fore.WHITE + "Facebook :")
-    print(Fore.BLUE + " 3.", Fore.WHITE + "Twitter/X :")
-    print(Fore.RED + " 0. Keluar :")
+    print(Fore.BLUE + " 1." + Fore.WHITE + " Youtube")
+    print(Fore.BLUE + " 2." + Fore.WHITE + " Facebook")
+    print(Fore.BLUE + " 3." + Fore.WHITE + " Twitter/X")
+    print(Fore.RED + " 0. Keluar")
     print(Fore.CYAN + "="*44)
 
 def tampilkan_salam():
-    print(f"{BLUE}{'='*40}")
-    print("=        Update pembaruan script       =")
-    print(f"{'='*40}{RESET}")
+    print(Fore.BLUE + "="*40)
+    print(Fore.BLUE + "=        Update pembaruan script       =")
+    print(Fore.BLUE + "="*40 + Style.RESET_ALL)
