@@ -16,10 +16,10 @@ def tampilkan_menu_utama():
     print(Fore.CYAN + "\n" + "="*44)
     print(Fore.MAGENTA + Style.BRIGHT + "     Selamat Datang di " + Fore.GREEN + "Vidio Unduh")
     print(Fore.CYAN + "="*44)
-    print(Fore.BLUE + " 1." + Fore.WHITE + " Youtube")
-    print(Fore.BLUE + " 2." + Fore.WHITE + " Facebook")
-    print(Fore.BLUE + " 3." + Fore.WHITE + " Twitter/X")
-    print(Fore.RED + " 0. Keluar")
+    print(Fore.YELLOW + " 1." + Fore.RED + " Youtube")
+    print(Fore.YELLOW + " 2." + Fore.BLUE + " Facebook")
+    print(Fore.YELLOW + " 3." + Fore.WHITE + " Twitter/X")
+    print(Fore.YELLOW + " 0. Keluar")
     print(Fore.CYAN + "="*44)
 
 def tampilkan_salam():
