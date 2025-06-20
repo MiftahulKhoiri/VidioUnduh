@@ -162,7 +162,3 @@ def unduh_video_audio_terpisah(alamat, resolusi=None):
             hapus_file_sementara(temp_video, temp_audio)
         except:
             pass
-
-if __name__ == "__main__":
-    url = input("Masukkan URL YouTube: ")
-    unduh_video_audio_terpisah(url)
