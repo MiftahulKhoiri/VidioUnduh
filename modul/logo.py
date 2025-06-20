@@ -1,24 +1,12 @@
 from colorama import Fore, Style
-
-try:
-    from colorama import Fore, Style, init as colorama_init
-    colorama_init()
-    HIJAU = Fore.GREEN
-    MERAH = Fore.RED
-    KUNING = Fore.YELLOW
-    BIRU = Fore.BLUE
-    RESET = Style.RESET_ALL
-except ImportError:
-    HIJAU = MERAH = KUNING = BIRU = RESET = ""
-
-
-def tampilkan_logo():
     CYAN = '\033[96m'
     BLUE = '\033[94m'
     GREEN = '\033[92m'
     YELLOW = '\033[93m'
     RESET = '\033[0m'
 
+def tampilkan_logo():
+   
     logo = f"""
 {CYAN}╔═══════════════════════╗
 {BLUE}║ {GREEN}Vidio {YELLOW}Unduh{BLUE}           ║
@@ -40,6 +28,6 @@ def tampilkan_menu_utama():
     print(Fore.CYAN + "="*44)
 
 def tampilkan_salam():
-    print(f"{BIRU}{'='*40}")
+    print(f"{BLUE}{'='*40}")
     print("=        Update pembaruan script       =")
     print(f"{'='*40}{RESET}")
