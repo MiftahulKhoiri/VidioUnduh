@@ -26,3 +26,8 @@ def tampilkan_menu_utama():
     print(Fore.BLUE + " 3.", Fore.WHITE + "Twitter/X :")
     print(Fore.RED + " 0. Keluar :")
     print(Fore.CYAN + "="*44)
+
+def tampilkan_salam():
+    print(f"{BIRU}{'='*40}")
+    print("=        Update pembaruan script       =")
+    print(f"{'='*40}{RESET}")
