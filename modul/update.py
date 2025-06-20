@@ -1,6 +1,7 @@
 import subprocess
 import sys
 import os
+from logo import *
 
 try:
     from colorama import Fore, Style, init as colorama_init
@@ -16,10 +17,6 @@ except ImportError:
 def is_git_repo():
     return os.path.isdir(".git")
 
-def tampilkan_salam():
-    print(f"{BIRU}{'='*40}")
-    print("=        Update pembaruan script       =")
-    print(f"{'='*40}{RESET}")
 
 def tampilkan_pembaruan(branch="main"):
     print("cek pembaruan program ")
