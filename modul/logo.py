@@ -5,7 +5,7 @@ init(autoreset=True)  # Agar warna otomatis reset setiap print
 def tampilkan_logo():
     logo = (
         f"{Fore.CYAN}╔═══════════════════════╗\n"
-        f"{Fore.BLUE}║ {Fore.GREEN}Vidio Unduh{Fore.BLUE}           ║\n"
+        f"{Fore.CYAN}║ {Fore.GREEN}Vidio Unduh{Fore.CYAN}           ║\n"
         f"{Fore.CYAN}║ {Fore.BLUE}Vidio Download Tools {Fore.CYAN}  ║\n"
         f"{Fore.CYAN}╚═══════════════════════╝{Style.RESET_ALL}"
     )
