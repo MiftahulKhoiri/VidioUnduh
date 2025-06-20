@@ -18,7 +18,7 @@ def tampilkan_menu_utama():
     print(Fore.CYAN + "="*44)
     print(Fore.YELLOW + " 1." + Fore.RED + " Youtube")
     print(Fore.YELLOW + " 2." + Fore.BLUE + " Facebook")
-    print(Fore.YELLOW + " 3." + Fore.WHITE + " Twitter/X")
+    print(Fore.YELLOW + " 3." + Fore.BLUE + " Twitter/X")
     print(Fore.YELLOW + " 0. Keluar")
     print(Fore.CYAN + "="*44)
 
