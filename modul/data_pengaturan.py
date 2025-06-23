@@ -29,6 +29,7 @@ def cek_isi():
 
         if required_moduls != current_moduls:
             print("Isi file tidak sesuai, melakukan update...")
+            modul_belum_lengkap()
             buat_folder_vidio_download(nama_folder='VidioDownload')
             pasang_dan_cek_modul(
                 nama_file_requirements='requirements.txt',
