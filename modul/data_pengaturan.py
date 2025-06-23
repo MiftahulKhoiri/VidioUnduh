@@ -23,7 +23,7 @@ def cek_isi():
         
         if current_content != required_content:
             print("Isi file tidak sesuai, melakukan update...")
-            update()
+            buat_folder_vidio_download()
         else:
             print("Isi file sudah sesuai, tidak perlu update.")
     
