@@ -1,6 +1,6 @@
 import os
 from modul.modul import buat_folder_vidio_download, pasang_dan_cek_modul
-from modul.Logo import *
+from modul.logo import *
 
 def cek_data_buat():
     """Cek keberadaan file pengaturan.txt, buat jika belum ada"""
