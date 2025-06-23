@@ -26,7 +26,7 @@ def main():
     hapus_layar()
 
     # Cek dan install modul, juga buat folder VidioDownload
-    def pengaturan_data()
+    pengaturan_data()
 
     # Jeda lagi setelah proses modul
     time.sleep(2)
