@@ -62,11 +62,3 @@ def buat_folder_vidio_download(nama_folder='VidioDownload'):
             print(f"\033[1;34mℹ Folder [{nama_folder}] sudah ada.\033[0m")
     except Exception as e:
         print(f"\033[1;31mTerjadi kesalahan saat membuat folder: {e}\033[0m")
-
-def cek_modul_dan_folder():
-    """
-    Mengecek dan memasang modul yang diperlukan serta membuat folder VidioDownload.
-    Fungsi ini dapat diimpor oleh script lain.
-    """
-    pasang_dan_cek_modul()
-    buat_folder_vidio_download()
