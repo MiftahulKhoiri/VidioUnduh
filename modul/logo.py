@@ -24,5 +24,5 @@ def tampilkan_menu_utama():
 
 def tampilkan_salam():
     print(Fore.BLUE + "="*40)
-    print(Fore.RED + "=        Update pembaruan script       =")
+    print(Fore.BLUE + "=" + Fore.RED + "       Update pembaruan script       " + Fore.BLUE + "=")
     print(Fore.BLUE + "="*40 + Style.RESET_ALL)
