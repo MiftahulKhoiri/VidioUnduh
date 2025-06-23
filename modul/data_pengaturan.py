@@ -24,8 +24,14 @@ def cek_isi():
         if current_content != required_content:
             print("Isi file tidak sesuai, melakukan update...")
             buat_folder_vidio_download()
+            pasang_dan_cek_modul()
         else:
             print("Isi file sudah sesuai, tidak perlu update.")
     
     except FileNotFoundError:
         print("Error: requirements.txt tidak ditemukan.")
+
+def pengaturan_data():
+    print ("data")
+    cek_data_buat()
+    cek_isi() 
