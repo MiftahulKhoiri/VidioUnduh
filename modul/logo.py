@@ -26,3 +26,9 @@ def tampilkan_salam():
     print(Fore.BLUE + "="*40)
     print(Fore.BLUE + "=" + Fore.RED + "       Update pembaruan script       " + Fore.BLUE + "=")
     print(Fore.BLUE + "="*40 + Style.RESET_ALL)
+
+def modul_lengkap():
+    print (Fore.GREEN + "Modul Sudah Lengkap ")
+
+def modul_belumlengkap():
+    print (Fore.RED + "Modul Belum Lengkap akan di lakukan update dan install ")
