@@ -1,5 +1,5 @@
 import os
-from modul import *
+from .modul import *
 
 def cek_data_buat():
     """Cek keberadaan file pengaturan.txt, buat jika belum ada"""
