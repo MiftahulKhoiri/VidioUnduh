@@ -13,7 +13,7 @@ if MODUL_DIR not in sys.path:
     sys.path.append(MODUL_DIR)
 
 import update
-from modul import modul  # Import modul Anda
+from modul.data_pengaturan import *# Import modul Anda
 
 def main():
     # Bersihkan layar sebelum mulai
