@@ -27,8 +27,21 @@ def tampilkan_salam():
     print(Fore.BLUE + "=" + Fore.RED + "       Update pembaruan script       " + Fore.BLUE + "=")
     print(Fore.BLUE + "="*40 + Style.RESET_ALL)
 
-def modul_lengkap():
-    print (Fore.GREEN + "Modul Sudah Lengkap. tidak perlu melakukan pemasangan otomatis....")
 
-def modul_belumlengkap():
-    print (Fore.RED + "Modul Belum Lengkap akan di lakukan update dan install otomatis.....")
+def modul_lengkap(detail="Semua modul telah terpasang dengan benar."):
+    """
+    Menampilkan pesan bahwa modul sudah lengkap.
+    """
+    print(Fore.GREEN + "[INFO] Modul sudah lengkap.")
+    print(Fore.GREEN + f"       {detail}")
+    print(Fore.GREEN + "       Tidak perlu melakukan pemasangan otomatis.")
+    print(Style.RESET_ALL)
+
+def modul_belumlengkap(detail="Beberapa modul belum terpasang atau perlu pembaruan."):
+    """
+    Menampilkan pesan bahwa modul belum lengkap dan akan dilakukan update/install otomatis.
+    """
+    print(Fore.RED + "[PERINGATAN] Modul belum lengkap!")
+    print(Fore.RED + f"             {detail}")
+    print(Fore.RED + "             Akan dilakukan update dan install otomatis...")
+    print(Style.RESET_ALL)
