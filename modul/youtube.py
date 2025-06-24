@@ -8,21 +8,9 @@ init(autoreset=True)
 NAMA_FOLDER = "VidioDownload"
 os.makedirs(NAMA_FOLDER, exist_ok=True)
 
-ILLEGAL_FILENAME_CHARS = r'<>:"/\|?*'
-
-def bersihkan_nama_file(nama):
-    for c in ILLEGAL_FILENAME_CHARS:
-        nama = nama.replace(c, '')
-    return nama.strip()
-
 def unduh_video_audio_terpisah(alamat, resolusi=None):
     temp_video = None
     temp_audio = None
-
-    # Cek ffmpeg
-    if not shutil.which("ffmpeg"):
-        print(Fore.RED + "ffmpeg tidak ditemukan! Silakan install ffmpeg terlebih dahulu.")
-        return
 
     try:
         # Pilih resolusi
