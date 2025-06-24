@@ -1,6 +1,6 @@
 # VidioUnduh
 
-VidioUnduh adalah alat untuk mengunduh video secara otomatis dari sebuah website.
+VidioUnduh adalah alat untuk mengunduh video secara otomatis dari sebuah website menggunakan cli.
 
 ## Fitur
 
