@@ -7,9 +7,9 @@ def cek_data_buat():
     if not os.path.exists('pengaturan.txt'):
         with open('pengaturan.txt', 'w') as f:
             pass  # File kosong dibuat
-        print("File pengaturan.txt dibuat karena belum ada.")
+        print("File pengaturan belum ada...\n membuat file pengaturan ...")
     else:
-        print("File pengaturan.txt sudah ada.")
+        print("File pengaturan sudah ada ....")
 
 def cek_isi():
     """Cek isi file pengaturan.txt terhadap modul pada requirements.txt dan update jika perlu"""
