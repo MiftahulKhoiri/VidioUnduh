@@ -1,16 +1,29 @@
 import os
-import subprocess
-import re
-import sys
+import shutil
 from yt_dlp import YoutubeDL
-from colorama import init, Fore, Style
+from colorama import init, Fore
 from unduh import *
 
 init(autoreset=True)
 NAMA_FOLDER = "VidioDownload"
 os.makedirs(NAMA_FOLDER, exist_ok=True)
 
+ILLEGAL_FILENAME_CHARS = r'<>:"/\|?*'
+
+def bersihkan_nama_file(nama):
+    for c in ILLEGAL_FILENAME_CHARS:
+        nama = nama.replace(c, '')
+    return nama.strip()
+
 def unduh_video_audio_terpisah(alamat, resolusi=None):
+    temp_video = None
+    temp_audio = None
+
+    # Cek ffmpeg
+    if not shutil.which("ffmpeg"):
+        print(Fore.RED + "ffmpeg tidak ditemukan! Silakan install ffmpeg terlebih dahulu.")
+        return
+
     try:
         # Pilih resolusi
         if not resolusi:
@@ -49,20 +62,35 @@ def unduh_video_audio_terpisah(alamat, resolusi=None):
         }
 
         print(Fore.YELLOW + "Mengunduh video...")
-        with YoutubeDL(opsi_video) as ydl:
-            info_video = ydl.extract_info(alamat, download=True)
-            video_ext = info_video.get('ext', 'mp4')
-            judul = info_video.get('title', 'video')
-            temp_video = f"temp_video.{video_ext}"
+        try:
+            with YoutubeDL(opsi_video) as ydl:
+                info_video = ydl.extract_info(alamat, download=True)
+                video_ext = info_video.get('ext', 'mp4')
+                judul = info_video.get('title', 'video')
+                temp_video = f"temp_video.{video_ext}"
+        except Exception as e:
+            print(Fore.RED + f"Gagal mengunduh video: {e}")
+            if temp_video and os.path.exists(temp_video):
+                os.remove(temp_video)
+            return
 
         print(Fore.YELLOW + "Mengunduh audio...")
-        with YoutubeDL(opsi_audio) as ydl:
-            info_audio = ydl.extract_info(alamat, download=True)
-            audio_ext = info_audio.get('ext', 'm4a')
-            temp_audio = f"temp_audio.{audio_ext}"
+        try:
+            with YoutubeDL(opsi_audio) as ydl:
+                info_audio = ydl.extract_info(alamat, download=True)
+                audio_ext = info_audio.get('ext', 'm4a')
+                temp_audio = f"temp_audio.{audio_ext}"
+        except Exception as e:
+            print(Fore.RED + f"Gagal mengunduh audio: {e}")
+            if temp_audio and os.path.exists(temp_audio):
+                os.remove(temp_audio)
+            if temp_video and os.path.exists(temp_video):
+                os.remove(temp_video)
+            return
 
         tanggal = tanggal_hari_ini()
-        nama_file = cek_file_dan_konfirmasi(judul, "mp4", tanggal)
+        judul_bersih = bersihkan_nama_file(judul)
+        nama_file = cek_file_dan_konfirmasi(judul_bersih, "mp4", tanggal)
         if not nama_file:
             hapus_file_sementara(temp_video, temp_audio)
             return
@@ -79,19 +107,24 @@ def unduh_video_audio_terpisah(alamat, resolusi=None):
             '-strict', 'experimental',
             hasil_output
         ]
-        # Menggunakan progress ffmpeg secara persentase
-        retcode = tampilkan_progress_ffmpeg(perintah, temp_video)
-        if retcode != 0:
-            print(Fore.RED + "Terjadi kesalahan saat menggabungkan video dan audio!")
+        try:
+            retcode = tampilkan_progress_ffmpeg(perintah, temp_video)
+            if retcode != 0:
+                print(Fore.RED + "Terjadi kesalahan saat menggabungkan video dan audio!")
+                hapus_file_sementara(temp_video, temp_audio)
+                return
+        except Exception as e:
+            print(Fore.RED + f"Gagal menggabungkan video dan audio: {e}")
             hapus_file_sementara(temp_video, temp_audio)
             return
 
         hapus_file_sementara(temp_video, temp_audio)
         print(Fore.GREEN + f"Video hasil gabungan disimpan di: {hasil_output}")
+
     except Exception as e:
-        print(Fore.RED + "Gagal mengunduh atau menggabungkan video/audio!")
+        print(Fore.RED + "Terjadi kesalahan tak terduga!")
         print(Fore.RED + f"Detail error: {e}")
         try:
             hapus_file_sementara(temp_video, temp_audio)
-        except:
+        except Exception:
             pass
