@@ -28,7 +28,7 @@ def tampilkan_salam():
     print(Fore.BLUE + "="*40 + Style.RESET_ALL)
 
 def modul_lengkap():
-    print (Fore.GREEN + "Modul Sudah Lengkap ")
+    print (Fore.GREEN + "Modul Sudah Lengkap. tidak perlu melakukan pemasangan otomatis....")
 
 def modul_belumlengkap():
-    print (Fore.RED + "Modul Belum Lengkap akan di lakukan update dan install ")
+    print (Fore.RED + "Modul Belum Lengkap akan di lakukan update dan install otomatis.....")
