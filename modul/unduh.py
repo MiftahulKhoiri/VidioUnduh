@@ -9,6 +9,12 @@ from colorama import init, Fore, Style
 init(autoreset=True)
 NAMA_FOLDER = "VidioDownload"
 os.makedirs(NAMA_FOLDER, exist_ok=True)
+ILLEGAL_FILENAME_CHARS = r'<>:"/\|?*'
+
+def bersihkan_nama_file(nama):
+    for c in ILLEGAL_FILENAME_CHARS:
+        nama = nama.replace(c, '')
+    return nama.strip()
 
 def tanggal_hari_ini():
     return datetime.datetime.now().strftime("%d-%m-%Y")
