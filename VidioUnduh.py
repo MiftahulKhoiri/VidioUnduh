@@ -28,8 +28,8 @@ def main():
     # Cek dan install modul, juga buat folder VidioDownload
     pengaturan_data()
 
-    # Jeda lagi setelah proses modul
-    time.sleep(2)
+    # Jeda lagi setelah proses cek modul
+    time.sleep(4)
 
     # Setelah update & cek modul, jalankan main.py
     try:
