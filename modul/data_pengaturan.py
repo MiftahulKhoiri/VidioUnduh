@@ -1,4 +1,6 @@
 import os
+from colorama import init
+init(autoreset=True)
 from modul.modul import buat_folder_vidio_download, pasang_dan_cek_modul
 from modul.logo import *
 
