@@ -28,7 +28,7 @@ def cek_isi():
             ])
 
         if required_moduls != current_moduls:
-            print("Isi file tidak sesuai, melakukan update...")
+            print("modul belum terpasang, melakukan pemasangan otomatis")
             modul_belumlengkap()
             buat_folder_vidio_download(nama_folder='VidioDownload')
             pasang_dan_cek_modul(
@@ -36,13 +36,13 @@ def cek_isi():
                 file_pengaturan='pengaturan.txt'
             )
         else:
-            print("Isi file sudah sesuai, tidak perlu update.")
+            print("modul yangdibutuhkan sudah lengkap, tidaknperlu install ulang lagi")
             modul_lengkap()
 
     except FileNotFoundError:
         print("Error: requirements.txt tidak ditemukan.")
 
 def pengaturan_data():
-    print("data")
+    print("konfigurasi modulyang di butuhkan")
     cek_data_buat()
     cek_isi()
